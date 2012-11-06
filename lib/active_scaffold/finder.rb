@@ -38,10 +38,10 @@ module ActiveScaffold
       # TODO: this should reside on the column, not the controller
       def condition_for_column(column, value, text_search = :full)
         like_pattern = like_pattern(text_search)
+        return unless column and column.search_sql and not value.blank?
         if self.respond_to?("condition_for_#{column.name}_column")
           return self.send("condition_for_#{column.name}_column", column, value, like_pattern)
         end
-        return unless column and column.search_sql and not value.blank?
         search_ui = column.search_ui || column.column.try(:type)
         begin
           sql, *values = if search_ui && self.respond_to?("condition_for_#{search_ui}_type")
